@@ -1,0 +1,30 @@
+{
+  "_info": "Veckoschema. Dagar: 1 = måndag ... 5 = fredag. type: 'lesson' eller 'other' (visas nedtonat). plan = nyckel i yearplan.json.",
+  "days": {
+    "1": [
+      { "start": "08:30", "end": "10:00", "course": "Engelska 1", "group": "SUAW26", "room": "A6", "type": "lesson", "plan": "eng_su" },
+      { "start": "10:10", "end": "11:40", "course": "Gymnasiearbete", "group": "AW24", "room": "D1", "type": "lesson", "plan": "gyarte" },
+      { "start": "12:30", "end": "14:00", "course": "Engelska 1", "group": "FF26", "room": "A6", "type": "lesson", "plan": "eng_ff" },
+      { "start": "14:30", "end": "15:30", "course": "Resurstid", "type": "other" },
+      { "start": "15:30", "end": "16:30", "course": "Arbetstid", "type": "other" }
+    ],
+    "2": [
+      { "start": "08:30", "end": "11:30", "course": "Artificiell intelligens 1", "group": "AW26", "room": "D1", "type": "lesson", "plan": "ai" },
+      { "start": "12:30", "end": "15:30", "course": "Webbutveckling 1", "group": "AU25_AW25", "room": "D1", "type": "lesson", "plan": "webb1" },
+      { "start": "15:35", "end": "16:05", "course": "Mentorstid", "room": "A4", "type": "other" }
+    ],
+    "3": [
+      { "start": "08:30", "end": "10:00", "course": "Engelska 1", "group": "SUAW26", "room": "A4", "type": "lesson", "plan": "eng_su" },
+      { "start": "12:00", "end": "15:00", "course": "Informationsteknik 1", "group": "AU25_AW25", "room": "D1", "type": "lesson", "plan": "it" },
+      { "start": "15:00", "end": "16:30", "course": "Arbetstid", "type": "other" }
+    ],
+    "4": [
+      { "start": "10:10", "end": "11:40", "course": "Engelska 1", "group": "FF26", "room": "A6", "type": "lesson", "plan": "eng_ff" }
+    ],
+    "5": [
+      { "start": "08:30", "end": "11:30", "course": "Tillämpad programmering 1", "group": "AW26", "room": "D1", "type": "lesson", "plan": "tp" },
+      { "start": "12:45", "end": "14:20", "course": "Webbutveckling 2", "group": "AW24", "room": "D1", "type": "lesson", "plan": "webb2" },
+      { "start": "14:25", "end": "16:00", "course": "Webbserverprogrammering 1", "group": "AW24", "room": "D1", "type": "lesson", "plan": "webb2" }
+    ]
+  }
+}

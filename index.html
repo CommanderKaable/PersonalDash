@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Startsida</title>
+  <meta name="description" content="Personlig startsida: schema, väder, hockey, marknad och nyheter.">
+  <!-- Set the theme before first paint so the page never flashes the wrong colours. -->
+  <script>
+    try {
+      const saved = localStorage.getItem("startsida.theme");
+      const theme = saved ? JSON.parse(saved) : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = theme;
+    } catch { document.documentElement.dataset.theme = "light"; }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Saira+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <header class="masthead reveal" style="--i:0">
+    <div class="masthead__brand">
+      <h1 class="masthead__title" data-text="Startsida//">Startsida<span class="masthead__slash">//</span></h1>
+      <p class="masthead__edition" id="edition">&nbsp;</p>
+    </div>
+    <div class="masthead__clock">
+      <button class="btn btn--theme" id="theme-toggle" type="button" aria-label="Byt tema">
+        <span class="btn__icon" aria-hidden="true">◐</span><span id="theme-label">Mörkt</span>
+      </button>
+      <span class="masthead__week" id="week">V–</span>
+      <time class="masthead__time" id="clock">--<span class="blink">:</span>--</time>
+    </div>
+  </header>
+
+  <section class="weather reveal" style="--i:1" id="weather" aria-label="Väder">
+    <p class="muted">Hämtar väder …</p>
+  </section>
+
+  <div class="ticker reveal" style="--i:2" id="ticker" aria-label="Nyhets- och kursremsa">
+    <div class="ticker__track" id="ticker-track"></div>
+  </div>
+
+  <main class="grid">
+    <div class="col col--main">
+      <section class="panel panel--now reveal" style="--i:3" id="now" aria-label="Nu och nästa">
+        <p class="muted">Laddar schema …</p>
+      </section>
+
+      <section class="panel reveal" style="--i:4" aria-labelledby="today-h">
+        <h2 class="label" id="today-h">Dagens schema</h2>
+        <ol class="agenda" id="agenda"></ol>
+      </section>
+
+      <section class="panel reveal" style="--i:5" aria-labelledby="plan-h">
+        <h2 class="label" id="plan-h">Veckans plan</h2>
+        <div id="weekplan"></div>
+      </section>
+
+      <section class="panel reveal" style="--i:6" aria-labelledby="feeds-h">
+        <div class="panel__head">
+          <h2 class="label" id="feeds-h">Flöden</h2>
+          <div class="tabs" id="feed-tabs" role="tablist"></div>
+          <button class="btn btn--refresh" type="button" data-refresh="feeds" aria-label="Uppdatera flöden">
+            <span class="btn__icon" aria-hidden="true">↻</span>Uppdatera
+          </button>
+        </div>
+        <ul class="feed" id="feed"></ul>
+        <p class="stamp" id="feed-stamp"></p>
+      </section>
+    </div>
+
+    <aside class="col col--side">
+      <section class="panel reveal" style="--i:7" aria-labelledby="hockey-h">
+        <div class="panel__head">
+          <h2 class="label label--cyan" id="hockey-h">Hockey</h2>
+          <button class="btn btn--refresh" type="button" data-refresh="hockey" aria-label="Uppdatera hockey">
+            <span class="btn__icon" aria-hidden="true">↻</span>Uppdatera
+          </button>
+        </div>
+        <div id="hockey"></div>
+      </section>
+
+      <section class="panel reveal" style="--i:8" aria-labelledby="market-h">
+        <div class="panel__head">
+          <h2 class="label label--cyan" id="market-h">Marknad</h2>
+          <button class="btn btn--refresh" type="button" data-refresh="market" aria-label="Uppdatera marknad">
+            <span class="btn__icon" aria-hidden="true">↻</span>Uppdatera
+          </button>
+        </div>
+        <table class="market" id="market"></table>
+        <p class="stamp" id="market-stamp"></p>
+      </section>
+
+      <section class="panel reveal" style="--i:9" aria-labelledby="notes-h">
+        <div class="panel__head">
+          <h2 class="label" id="notes-h">Anteckningar</h2>
+          <span class="stamp" id="notes-status"></span>
+        </div>
+        <textarea class="notes" id="notes" rows="8" placeholder="Skriv något …" spellcheck="true"></textarea>
+        <p class="stamp">Sparas bara i den här webbläsaren.</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="footer reveal" style="--i:10">
+    <p>Memento Mori, per audāciam ad Astra</p>
+  </footer>
+</body>
+</html>
