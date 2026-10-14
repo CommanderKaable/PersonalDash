@@ -564,6 +564,31 @@ a:hover { color: var(--magenta); text-decoration-color: var(--magenta); }
 
 .error { color: var(--down); font-size: 14px; }
 
+/* ---------- Auto-scrolling boxes ---------- */
+
+.scroller {
+  max-height: var(--h, 400px);
+  overflow-y: auto;
+  scrollbar-width: none;                 /* Firefox */
+  overscroll-behavior: contain;
+  padding-top: 12px;
+  -webkit-mask-image: linear-gradient(transparent, #000 12px, #000 calc(100% - 28px), transparent);
+          mask-image: linear-gradient(transparent, #000 12px, #000 calc(100% - 28px), transparent);
+}
+.scroller::-webkit-scrollbar { display: none; }  /* Chrome, Edge, Safari */
+.scroller.is-paused { -webkit-mask-image: none; mask-image: none; }
+
+.tabs--full { margin-bottom: 10px; }
+.tabs--full .tab { flex: 1; text-align: center; }
+
+.news-sub {
+  margin: 16px 0 4px;
+  font: 700 12px/1 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+}
+
 /* ---------- Page entrance ---------- */
 
 .reveal { animation: reveal 0.7s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 70ms); }

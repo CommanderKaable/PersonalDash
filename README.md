@@ -51,11 +51,15 @@ python -m http.server 8000       (öppna sedan http://localhost:8000)
 ## Tema, uppdatering och animationer
 
 - **Ljust/mörkt:** knappen i sidhuvudet. Valet sparas i webbläsaren; har du aldrig valt följer sidan datorns inställning.
-- **Uppdatera-knapparna** läser om den senaste datan från GitHub Actions. Hacker News och kryptokurser hämtas
-  dessutom live direkt i webbläsaren (de källorna tillåter det). Aktier, NHL och RSS kan bara bli så färska som
-  senaste Action-körningen (var 30:e minut) – kör workflowet manuellt under Actions om du vill tvinga fram ny data.
-- Sidan uppdaterar sig själv tyst var 10:e minut.
-- **Rörelse:** remsan med kurser och rubriker rullar automatiskt (pausar när du håller musen över den).
+- **Nyheter** har flikar: Världen, Tech (AI, dev och cybersäkerhet) och Sport (Penguins, Lakers och sportnyheter).
+  Flikarna och källorna styrs av `newsTabs` och `feeds` i `data/config.json`.
+- **Hämtning:** varje gång sidan laddas eller laddas om hämtas ny data direkt, och sedan var 10:e minut
+  (och när du kommer tillbaka till fliken efter mer än 5 minuter). Uppdatera-knapparna gör samma sak på begäran.
+- **Vad som kan vara live:** Hacker News och kryptokurser hämtas direkt i webbläsaren. NHL provas direkt också;
+  om NHL inte tillåter det används cachen. Aktier, valutor och RSS-flöden kan bara bli så färska som senaste
+  GitHub Action-körningen (var 30:e minut) – kör workflowet manuellt under Actions om du vill tvinga fram ny data.
+- **Rörelse:** remsan med kurser och rubriker rullar i sidled, och nyhets- och marknadsrutorna rullar sakta nedåt
+  av sig själva. Allt pausar när du håller musen över; scrollar du själv tar du över en stund.
   Har datorn "minska rörelse" påslaget stängs alla animationer av.
 
 ## Bra att veta

@@ -1,4 +1,4 @@
-// Hockey: Penguins (NHL API) and Växjö Lakers (news headlines), from data/live/hockey.json.
+// Hockey: Penguins (NHL API) and Växjö Lakers (news headlines).
 
 import { esc } from "../lib/data.js";
 import { timeAgo } from "../lib/time.js";
@@ -46,15 +46,10 @@ function shlHTML(shl) {
     <p class="stamp"><a href="${esc(shl.link)}" target="_blank" rel="noopener">Tabell och matcher på shl.se →</a></p>`;
 }
 
-export function renderHockey(el, data) {
-  if (!data) {
-    el.innerHTML = `<p class="muted">Ingen data än – den hämtas av GitHub Actions.</p>`;
-    return;
-  }
-  el.classList.remove("stagger");
-  void el.offsetWidth; // restart the entrance animation on refresh
-  el.classList.add("stagger");
-  el.innerHTML = `
+/** Penguins + Lakers block, used at the top of the "Sport" news tab. */
+export function hockeyHTML(data) {
+  if (!data) return `<p class="muted">Ingen hockeydata än – den hämtas av GitHub Actions.</p>`;
+  return `
     <div class="team">
       <h3 class="team__name">${esc(data.nhl?.name || "Pittsburgh Penguins")}</h3>
       ${nhlHTML(data.nhl)}
@@ -62,6 +57,5 @@ export function renderHockey(el, data) {
     <div class="team">
       <h3 class="team__name">${esc(data.shl?.name || "Växjö Lakers")}</h3>
       ${shlHTML(data.shl)}
-    </div>
-    <p class="stamp">Uppdaterad ${esc(timeAgo(data.updated))}</p>`;
+    </div>`;
 }

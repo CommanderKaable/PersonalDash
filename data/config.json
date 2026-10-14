@@ -22,12 +22,16 @@
     "nhl": { "team": "PIT", "name": "Pittsburgh Penguins" },
     "shl": { "name": "Växjö Lakers", "newsQuery": "\"Växjö Lakers\"", "link": "https://www.shl.se/" }
   },
+  "newsTabs": ["Världen", "Tech", "Sport"],
   "feeds": [
-    { "category": "AI & Dev", "name": "Hacker News", "type": "hn" },
-    { "category": "AI & Dev", "name": "Simon Willison", "type": "rss", "url": "https://simonwillison.net/atom/everything/" },
-    { "category": "Cybersäkerhet", "name": "CERT-SE", "type": "rss", "url": "https://www.cert.se/feed.rss" },
-    { "category": "Cybersäkerhet", "name": "BleepingComputer", "type": "rss", "url": "https://www.bleepingcomputer.com/feed/" },
-    { "category": "Cybersäkerhet", "name": "Krebs on Security", "type": "rss", "url": "https://krebsonsecurity.com/feed/" },
-    { "category": "Nyheter", "name": "SVT Nyheter", "type": "rss", "url": "https://www.svt.se/nyheter/rss.xml" }
+    { "category": "Världen", "name": "SVT Utrikes", "type": "rss", "url": "https://www.svt.se/nyheter/utrikes/rss.xml" },
+    { "category": "Världen", "name": "SVT Nyheter", "type": "rss", "url": "https://www.svt.se/nyheter/rss.xml" },
+    { "category": "Världen", "name": "BBC World", "type": "rss", "url": "https://feeds.bbci.co.uk/news/world/rss.xml" },
+    { "category": "Tech", "name": "Hacker News", "type": "hn" },
+    { "category": "Tech", "name": "Simon Willison", "type": "rss", "url": "https://simonwillison.net/atom/everything/" },
+    { "category": "Tech", "name": "CERT-SE", "type": "rss", "url": "https://www.cert.se/feed.rss" },
+    { "category": "Tech", "name": "BleepingComputer", "type": "rss", "url": "https://www.bleepingcomputer.com/feed/" },
+    { "category": "Tech", "name": "Krebs on Security", "type": "rss", "url": "https://krebsonsecurity.com/feed/" },
+    { "category": "Sport", "name": "SVT Sport", "type": "rss", "url": "https://www.svt.se/sport/rss.xml" }
   ]
 }

@@ -58,38 +58,31 @@
         <div id="weekplan"></div>
       </section>
 
-      <section class="panel reveal" style="--i:6" aria-labelledby="feeds-h">
-        <div class="panel__head">
-          <h2 class="label" id="feeds-h">Flöden</h2>
-          <div class="tabs" id="feed-tabs" role="tablist"></div>
-          <button class="btn btn--refresh" type="button" data-refresh="feeds" aria-label="Uppdatera flöden">
-            <span class="btn__icon" aria-hidden="true">↻</span>Uppdatera
-          </button>
-        </div>
-        <ul class="feed" id="feed"></ul>
-        <p class="stamp" id="feed-stamp"></p>
-      </section>
     </div>
 
     <aside class="col col--side">
-      <section class="panel reveal" style="--i:7" aria-labelledby="hockey-h">
+      <section class="panel reveal" style="--i:6" aria-labelledby="news-h">
         <div class="panel__head">
-          <h2 class="label label--cyan" id="hockey-h">Hockey</h2>
-          <button class="btn btn--refresh" type="button" data-refresh="hockey" aria-label="Uppdatera hockey">
+          <h2 class="label label--cyan" id="news-h">Nyheter</h2>
+          <button class="btn btn--refresh" type="button" data-refresh="news" aria-label="Uppdatera nyheter och sport">
             <span class="btn__icon" aria-hidden="true">↻</span>Uppdatera
           </button>
         </div>
-        <div id="hockey"></div>
+        <div class="tabs tabs--full" id="news-tabs" role="tablist"></div>
+        <div class="scroller" id="news" style="--h: 460px"></div>
+        <p class="stamp" id="news-stamp"></p>
       </section>
 
-      <section class="panel reveal" style="--i:8" aria-labelledby="market-h">
+      <section class="panel reveal" style="--i:7" aria-labelledby="market-h">
         <div class="panel__head">
           <h2 class="label label--cyan" id="market-h">Marknad</h2>
           <button class="btn btn--refresh" type="button" data-refresh="market" aria-label="Uppdatera marknad">
             <span class="btn__icon" aria-hidden="true">↻</span>Uppdatera
           </button>
         </div>
-        <table class="market" id="market"></table>
+        <div class="scroller" id="market-scroll" style="--h: 300px">
+          <table class="market" id="market"></table>
+        </div>
         <p class="stamp" id="market-stamp"></p>
       </section>
 

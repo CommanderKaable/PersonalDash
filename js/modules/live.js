@@ -29,3 +29,33 @@ export async function liveCrypto(list) {
     currency: "SEK",
   }));
 }
+
+// NHL: tried directly first. If the API doesn't allow browser requests (CORS), this throws
+// and the page keeps the cached version from GitHub Actions.
+export async function liveNHL({ team, name }) {
+  const res = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${team}/now`);
+  if (!res.ok) throw new Error(res.status);
+  const sched = await res.json();
+  const games = sched.games.map((g) => {
+    const home = g.homeTeam.abbrev === team;
+    const us = home ? g.homeTeam : g.awayTeam;
+    const them = home ? g.awayTeam : g.homeTeam;
+    return {
+      start: g.startTimeUTC,
+      state: g.gameState,
+      home,
+      opponent: them.abbrev,
+      opponentName: them.placeName?.default || them.abbrev,
+      us: us.score ?? null,
+      them: them.score ?? null,
+      lastPeriod: g.gameOutcome?.lastPeriodType || null,
+    };
+  });
+  return {
+    team,
+    name,
+    live: games.find((g) => g.state === "LIVE" || g.state === "CRIT") || null,
+    last: games.filter((g) => g.state === "FINAL" || g.state === "OFF").slice(-3).reverse(),
+    next: games.filter((g) => g.state === "FUT" || g.state === "PRE").slice(0, 2),
+  };
+}

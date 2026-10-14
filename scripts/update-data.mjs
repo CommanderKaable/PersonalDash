@@ -102,7 +102,7 @@ async function updateFeeds() {
   for (const key of Object.keys(categories)) {
     categories[key] = categories[key]
       .sort((a, b) => (b.date || "").localeCompare(a.date || ""))
-      .slice(0, 15);
+      .slice(0, 25);
   }
   await save("feeds", { categories, errors });
 }
