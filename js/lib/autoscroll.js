@@ -1,9 +1,11 @@
 // Slowly scrolls a box downwards, pauses at the bottom, glides back to the top and repeats.
 // Stops while the mouse is over it, and gives control to you for a while if you scroll yourself.
+// Optional onEnd(): called after each full pass (or after `dwell` ms if nothing needs scrolling).
+// Return true from it if you replaced the content (e.g. switched tab) — then reset() is expected.
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
-export function autoScroll(el, { speed = 16, pauseTop = 3000, pauseBottom = 3500, userPause = 8000 } = {}) {
+export function autoScroll(el, { speed = 16, pauseTop = 3000, pauseBottom = 3500, userPause = 8000, dwell = 20000, onEnd = null } = {}) {
   let pos = 0;              // float position (scrollTop rounds to whole pixels)
   let waitUntil = performance.now() + pauseTop;
   let atBottom = false;
@@ -36,19 +38,27 @@ export function autoScroll(el, { speed = 16, pauseTop = 3000, pauseBottom = 3500
     last = now;
     const max = el.scrollHeight - el.clientHeight;
 
-    if (!hovered && !reducedMotion.matches && max > 4 && now >= waitUntil) {
-      if (atBottom) {
-        pos = 0;
-        atBottom = false;
-        setTop(0, true);
-        waitUntil = now + pauseTop;
-      } else {
-        pos = Math.min(max, pos + (speed * dt) / 1000);
-        setTop(pos);
-        if (pos >= max - 0.5) {
-          atBottom = true;
-          waitUntil = now + pauseBottom;
+    const canScroll = max > 4 && !reducedMotion.matches;
+
+    if (!hovered && now >= waitUntil) {
+      if (canScroll) {
+        if (atBottom) {
+          if (!onEnd?.()) {          // nobody switched the content: glide back up and go again
+            pos = 0;
+            atBottom = false;
+            setTop(0, true);
+            waitUntil = now + pauseTop;
+          }
+        } else {
+          pos = Math.min(max, pos + (speed * dt) / 1000);
+          setTop(pos);
+          if (pos >= max - 0.5) {
+            atBottom = true;
+            waitUntil = now + pauseBottom;
+          }
         }
+      } else if (onEnd && now >= waitUntil + dwell) {
+        if (!onEnd()) waitUntil = now + dwell;
       }
     }
     requestAnimationFrame(frame);

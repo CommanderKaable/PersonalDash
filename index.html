@@ -22,21 +22,20 @@
 <body>
   <header class="masthead reveal" style="--i:0">
     <div class="masthead__brand">
-      <h1 class="masthead__title" data-text="Startsida//">Startsida<span class="masthead__slash">//</span></h1>
+      <h1 class="masthead__title" id="dayname" data-text="&nbsp;">&nbsp;</h1>
       <p class="masthead__edition" id="edition">&nbsp;</p>
     </div>
-    <div class="masthead__clock">
-      <button class="btn btn--theme" id="theme-toggle" type="button" aria-label="Byt tema">
-        <span class="btn__icon" aria-hidden="true">◐</span><span id="theme-label">Mörkt</span>
-      </button>
-      <span class="masthead__week" id="week">V–</span>
-      <time class="masthead__time" id="clock">--<span class="blink">:</span>--</time>
-    </div>
+    <time class="masthead__time" id="clock">--<span class="blink">:</span>--</time>
   </header>
 
-  <section class="weather reveal" style="--i:1" id="weather" aria-label="Väder">
-    <p class="muted">Hämtar väder …</p>
-  </section>
+  <div class="weatherbar reveal" style="--i:1">
+    <section class="weather" id="weather" aria-label="Väder">
+      <p class="muted">Hämtar väder …</p>
+    </section>
+    <button class="btn btn--theme" id="theme-toggle" type="button" aria-label="Byt tema">
+      <span class="btn__icon" aria-hidden="true">◐</span><span id="theme-label">Mörkt</span>
+    </button>
+  </div>
 
   <div class="ticker reveal" style="--i:2" id="ticker" aria-label="Nyhets- och kursremsa">
     <div class="ticker__track" id="ticker-track"></div>
@@ -61,15 +60,16 @@
     </div>
 
     <aside class="col col--side">
-      <section class="panel reveal" style="--i:6" aria-labelledby="news-h">
+      <section class="panel panel--news reveal" style="--i:6" id="news-panel" aria-label="Nyheter och sport">
         <div class="panel__head">
-          <h2 class="label label--cyan" id="news-h">Nyheter</h2>
+          <div class="section-tabs" id="news-sections" role="tablist"></div>
+          <span class="cycle-dot" title="Byter flik automatiskt" aria-hidden="true"></span>
           <button class="btn btn--refresh" type="button" data-refresh="news" aria-label="Uppdatera nyheter och sport">
             <span class="btn__icon" aria-hidden="true">↻</span>Uppdatera
           </button>
         </div>
         <div class="tabs tabs--full" id="news-tabs" role="tablist"></div>
-        <div class="scroller" id="news" style="--h: 460px"></div>
+        <div class="scroller" id="news" style="--h: 520px"></div>
         <p class="stamp" id="news-stamp"></p>
       </section>
 

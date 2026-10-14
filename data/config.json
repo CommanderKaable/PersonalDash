@@ -1,37 +1,185 @@
 {
   "_info": "Inställningar. Väder hämtas direkt i webbläsaren. Marknad, hockey och flöden hämtas av GitHub Actions (scripts/update-data.mjs).",
   "locations": [
-    { "name": "Södra Sandby", "lat": 55.7167, "lon": 13.3489 },
-    { "name": "Lund", "lat": 55.7047, "lon": 13.191 }
+    {
+      "name": "Södra Sandby",
+      "lat": 55.7167,
+      "lon": 13.3489
+    },
+    {
+      "name": "Lund",
+      "lat": 55.7047,
+      "lon": 13.191
+    }
   ],
   "market": {
     "yahoo": [
-      { "symbol": "^OMX", "name": "OMXS30", "group": "Index" },
-      { "symbol": "INVE-B.ST", "name": "Investor B", "group": "Aktier" },
-      { "symbol": "ERIC-B.ST", "name": "Ericsson B", "group": "Aktier" },
-      { "symbol": "SAAB-B.ST", "name": "Saab B", "group": "Aktier" },
-      { "symbol": "EURSEK=X", "name": "EUR/SEK", "group": "Valuta" },
-      { "symbol": "USDSEK=X", "name": "USD/SEK", "group": "Valuta" }
+      {
+        "symbol": "^OMX",
+        "name": "OMXS30",
+        "group": "Index"
+      },
+      {
+        "symbol": "INVE-B.ST",
+        "name": "Investor B",
+        "group": "Aktier"
+      },
+      {
+        "symbol": "ERIC-B.ST",
+        "name": "Ericsson B",
+        "group": "Aktier"
+      },
+      {
+        "symbol": "SAAB-B.ST",
+        "name": "Saab B",
+        "group": "Aktier"
+      },
+      {
+        "symbol": "EURSEK=X",
+        "name": "EUR/SEK",
+        "group": "Valuta"
+      },
+      {
+        "symbol": "USDSEK=X",
+        "name": "USD/SEK",
+        "group": "Valuta"
+      }
     ],
     "crypto": [
-      { "id": "bitcoin", "name": "BTC" },
-      { "id": "ethereum", "name": "ETH" }
+      {
+        "id": "bitcoin",
+        "name": "BTC"
+      },
+      {
+        "id": "ethereum",
+        "name": "ETH"
+      }
     ]
   },
   "hockey": {
-    "nhl": { "team": "PIT", "name": "Pittsburgh Penguins" },
-    "shl": { "name": "Växjö Lakers", "newsQuery": "\"Växjö Lakers\"", "link": "https://www.shl.se/" }
+    "nhl": {
+      "team": "PIT",
+      "name": "Pittsburgh Penguins"
+    },
+    "shl": {
+      "name": "Växjö Lakers",
+      "newsQuery": "\"Växjö Lakers\"",
+      "link": "https://www.shl.se/",
+      "match": "Växjö"
+    }
   },
-  "newsTabs": ["Världen", "Tech", "Sport"],
   "feeds": [
-    { "category": "Världen", "name": "SVT Utrikes", "type": "rss", "url": "https://www.svt.se/nyheter/utrikes/rss.xml" },
-    { "category": "Världen", "name": "SVT Nyheter", "type": "rss", "url": "https://www.svt.se/nyheter/rss.xml" },
-    { "category": "Världen", "name": "BBC World", "type": "rss", "url": "https://feeds.bbci.co.uk/news/world/rss.xml" },
-    { "category": "Tech", "name": "Hacker News", "type": "hn" },
-    { "category": "Tech", "name": "Simon Willison", "type": "rss", "url": "https://simonwillison.net/atom/everything/" },
-    { "category": "Tech", "name": "CERT-SE", "type": "rss", "url": "https://www.cert.se/feed.rss" },
-    { "category": "Tech", "name": "BleepingComputer", "type": "rss", "url": "https://www.bleepingcomputer.com/feed/" },
-    { "category": "Tech", "name": "Krebs on Security", "type": "rss", "url": "https://krebsonsecurity.com/feed/" },
-    { "category": "Sport", "name": "SVT Sport", "type": "rss", "url": "https://www.svt.se/sport/rss.xml" }
-  ]
+    {
+      "category": "Världen",
+      "name": "BBC World",
+      "type": "rss",
+      "url": "https://feeds.bbci.co.uk/news/world/rss.xml"
+    },
+    {
+      "category": "Världen",
+      "name": "New York Times",
+      "type": "rss",
+      "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+    },
+    {
+      "category": "Världen",
+      "name": "The Guardian",
+      "type": "rss",
+      "url": "https://www.theguardian.com/world/rss"
+    },
+    {
+      "category": "Världen",
+      "name": "Al Jazeera",
+      "type": "rss",
+      "url": "https://www.aljazeera.com/xml/rss/all.xml"
+    },
+    {
+      "category": "Världen",
+      "name": "CNN",
+      "type": "rss",
+      "url": "http://rss.cnn.com/rss/edition_world.rss"
+    },
+    {
+      "category": "Världen",
+      "name": "Reuters",
+      "type": "gnews",
+      "query": "site:reuters.com world when:1d"
+    },
+    {
+      "category": "Världen",
+      "name": "SVT Utrikes",
+      "type": "rss",
+      "url": "https://www.svt.se/nyheter/utrikes/rss.xml"
+    },
+    {
+      "category": "Tech",
+      "name": "Hacker News",
+      "type": "hn"
+    },
+    {
+      "category": "Tech",
+      "name": "Simon Willison",
+      "type": "rss",
+      "url": "https://simonwillison.net/atom/everything/"
+    },
+    {
+      "category": "Tech",
+      "name": "CERT-SE",
+      "type": "rss",
+      "url": "https://www.cert.se/feed.rss"
+    },
+    {
+      "category": "Tech",
+      "name": "BleepingComputer",
+      "type": "rss",
+      "url": "https://www.bleepingcomputer.com/feed/"
+    },
+    {
+      "category": "Tech",
+      "name": "Krebs on Security",
+      "type": "rss",
+      "url": "https://krebsonsecurity.com/feed/"
+    },
+    {
+      "category": "NHL",
+      "name": "NHL-nyheter",
+      "type": "gnews",
+      "query": "NHL hockey when:2d"
+    },
+    {
+      "category": "SHL",
+      "name": "SVT Sport",
+      "type": "rss",
+      "url": "https://www.svt.se/sport/rss.xml"
+    },
+    {
+      "category": "SHL",
+      "name": "SHL-nyheter",
+      "type": "gnews",
+      "query": "SHL hockey when:2d"
+    }
+  ],
+  "sections": [
+    {
+      "name": "Nyheter",
+      "tabs": [
+        "Världen",
+        "Tech"
+      ]
+    },
+    {
+      "name": "Sport",
+      "tabs": [
+        "NHL",
+        "SHL",
+        "Mina lag"
+      ]
+    }
+  ],
+  "autoCycle": {
+    "_info": "Byter flik av sig själv när du inte rört panelen på en stund.",
+    "enabled": true,
+    "idleSeconds": 45,
+    "dwellSeconds": 25
+  }
 }

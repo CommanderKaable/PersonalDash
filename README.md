@@ -51,8 +51,15 @@ python -m http.server 8000       (öppna sedan http://localhost:8000)
 ## Tema, uppdatering och animationer
 
 - **Ljust/mörkt:** knappen i sidhuvudet. Valet sparas i webbläsaren; har du aldrig valt följer sidan datorns inställning.
-- **Nyheter** har flikar: Världen, Tech (AI, dev och cybersäkerhet) och Sport (Penguins, Lakers och sportnyheter).
-  Flikarna och källorna styrs av `newsTabs` och `feeds` i `data/config.json`.
+- **Nyheter & Sport:** två huvudflikar. *Nyheter* har Världen (BBC, NYT, Guardian, Al Jazeera, CNN, Reuters, SVT)
+  och Tech (AI, dev, cybersäkerhet). *Sport* har NHL (dagens matcher + tabeller per division), SHL (tabell) och
+  Mina lag (Penguins och Lakers). Dina lag markeras i alla tabeller. Allt styrs av `sections`, `feeds` och `hockey`
+  i `data/config.json`.
+- **Auto-växling:** när du inte rört panelen på en stund (`autoCycle.idleSeconds`) går den vidare till nästa flik
+  efter varje genomrullning. Klickar du själv stannar den där, och ditt val sparas till nästa gång.
+- **SHL-tabellen** läses från säsongens artikel på engelska Wikipedia (SHL har inget öppet API). Den uppdateras
+  oftast inom ett dygn; går den inte att läsa visas en länk till shl.se i stället.
+- **Reuters** har inget eget RSS längre, så rubrikerna hämtas via en Google Nyheter-sökning på reuters.com.
 - **Hämtning:** varje gång sidan laddas eller laddas om hämtas ny data direkt, och sedan var 10:e minut
   (och när du kommer tillbaka till fliken efter mer än 5 minuter). Uppdatera-knapparna gör samma sak på begäran.
 - **Vad som kan vara live:** Hacker News och kryptokurser hämtas direkt i webbläsaren. NHL provas direkt också;

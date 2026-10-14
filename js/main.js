@@ -17,7 +17,7 @@ import { liveHackerNews, liveCrypto, liveNHL } from "./modules/live.js";
 const $ = (id) => document.getElementById(id);
 const AUTO_REFRESH_MIN = 10;
 
-initMasthead({ editionEl: $("edition"), weekEl: $("week"), clockEl: $("clock") });
+initMasthead({ dayEl: $("dayname"), editionEl: $("edition"), clockEl: $("clock") });
 initTheme($("theme-toggle"), $("theme-label"));
 initNotes($("notes"), $("notes-status"));
 
@@ -33,10 +33,14 @@ const [config, timetable, yearplan, hockey, market, feeds] = await Promise.all([
 
 const state = { hockey, market, feeds };
 const news = createNews({
+  panelEl: $("news-panel"),
+  sectionsEl: $("news-sections"),
   tabsEl: $("news-tabs"),
   bodyEl: $("news"),
   stampEl: $("news-stamp"),
-  tabs: config?.newsTabs || ["Världen", "Tech", "Sport"],
+  sections: config?.sections || [{ name: "Nyheter", tabs: ["Världen", "Tech"] }, { name: "Sport", tabs: ["NHL", "SHL", "Mina lag"] }],
+  hockeyConfig: config?.hockey,
+  autoCycle: config?.autoCycle,
 });
 const marketScroll = autoScroll($("market-scroll"), { speed: 12 });
 

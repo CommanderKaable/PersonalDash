@@ -1,4 +1,4 @@
-// Hockey: Penguins (NHL API) and Växjö Lakers (news headlines).
+// "Mina lag": team cards for Penguins (NHL API) and Växjö Lakers (table position + news).
 
 import { esc } from "../lib/data.js";
 import { timeAgo } from "../lib/time.js";
@@ -8,7 +8,7 @@ const fmtGameTime = (iso) =>
 
 const PERIOD = { OT: " (förl.)", SO: " (straff.)" };
 
-function nhlHTML(nhl) {
+function penguinsHTML(nhl) {
   if (!nhl) return `<p class="muted">Ingen NHL-data än.</p>`;
   const s = nhl.standing;
   const standing = s
@@ -37,25 +37,25 @@ function nhlHTML(nhl) {
   return `${standing}${live}${last}${next}`;
 }
 
-function shlHTML(shl) {
+function lakersHTML(shl, standing = "") {
   if (!shl) return "";
   const news = (shl.news || []).slice(0, 4).map((n) => `
     <li><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a>
       <span class="feed__meta">${esc(timeAgo(n.date))}</span></li>`).join("");
-  return `${news ? `<ul class="team__news">${news}</ul>` : `<p class="muted">Inga nyheter än.</p>`}
+  return `${standing}${news ? `<ul class="team__news">${news}</ul>` : `<p class="muted">Inga nyheter än.</p>`}
     <p class="stamp"><a href="${esc(shl.link)}" target="_blank" rel="noopener">Tabell och matcher på shl.se →</a></p>`;
 }
 
-/** Penguins + Lakers block, used at the top of the "Sport" news tab. */
-export function hockeyHTML(data) {
+/** Penguins + Lakers cards. */
+export function hockeyHTML(data, { shlStanding = "" } = {}) {
   if (!data) return `<p class="muted">Ingen hockeydata än – den hämtas av GitHub Actions.</p>`;
   return `
     <div class="team">
       <h3 class="team__name">${esc(data.nhl?.name || "Pittsburgh Penguins")}</h3>
-      ${nhlHTML(data.nhl)}
+      ${penguinsHTML(data.nhl)}
     </div>
     <div class="team">
       <h3 class="team__name">${esc(data.shl?.name || "Växjö Lakers")}</h3>
-      ${shlHTML(data.shl)}
+      ${lakersHTML(data.shl, shlStanding)}
     </div>`;
 }

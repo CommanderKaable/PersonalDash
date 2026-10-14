@@ -86,6 +86,7 @@ async function fetchFeed(feed) {
       date: h.created_at,
     }));
   }
+  if (feed.type === "gnews") return googleNews(feed.query, feed.name, 10);
   return parseFeed(await getText(feed.url), feed.name).slice(0, 10);
 }
 
@@ -173,50 +174,148 @@ function nhlGame(g, team) {
   };
 }
 
-async function fetchNHL({ team, name }) {
-  const sched = await getJSON(`https://api-web.nhle.com/v1/club-schedule-season/${team}/now`);
-  const games = sched.games.map((g) => nhlGame(g, team));
-  const live = games.find((g) => g.state === "LIVE" || g.state === "CRIT") || null;
-  const finished = games.filter((g) => g.state === "FINAL" || g.state === "OFF");
-  const upcoming = games.filter((g) => g.state === "FUT" || g.state === "PRE");
-  let standing = null;
-  try {
-    const st = await getJSON("https://api-web.nhle.com/v1/standings/now");
-    const row = st.standings.find((s) => s.teamAbbrev?.default === team);
-    if (row) {
-      standing = {
-        division: row.divisionName,
-        divisionRank: row.divisionSequence,
-        points: row.points,
-        gp: row.gamesPlayed,
-        record: `${row.wins}-${row.losses}-${row.otLosses}`,
-      };
-    }
-  } catch { /* standings are optional */ }
+// Whole-league standings: one row per team.
+async function fetchNHLStandings() {
+  const st = await getJSON("https://api-web.nhle.com/v1/standings/now");
+  return st.standings.map((r) => ({
+    team: r.teamAbbrev?.default,
+    name: r.teamCommonName?.default || r.teamName?.default || r.teamAbbrev?.default,
+    conference: r.conferenceName,
+    division: r.divisionName,
+    divisionRank: r.divisionSequence,
+    leagueRank: r.leagueSequence,
+    gp: r.gamesPlayed,
+    w: r.wins,
+    l: r.losses,
+    otl: r.otLosses,
+    pts: r.points,
+    gd: r.goalDifferential,
+    streak: r.streakCode ? `${r.streakCode}${r.streakCount}` : null,
+  }));
+}
+
+// Today's (or the latest) games across the league.
+async function fetchNHLScores() {
+  const data = await getJSON("https://api-web.nhle.com/v1/score/now");
   return {
-    team,
-    name,
-    live,
-    last: finished.slice(-3).reverse(),
-    next: upcoming.slice(0, 2),
-    standing,
+    date: data.currentDate || null,
+    games: (data.games || []).map((g) => ({
+      start: g.startTimeUTC,
+      state: g.gameState,
+      home: g.homeTeam?.abbrev,
+      away: g.awayTeam?.abbrev,
+      homeScore: g.homeTeam?.score ?? null,
+      awayScore: g.awayTeam?.score ?? null,
+      period: g.periodDescriptor?.number ?? null,
+      lastPeriod: g.gameOutcome?.lastPeriodType || null,
+    })),
   };
 }
 
-async function fetchSHLNews({ name, newsQuery, link }) {
-  const q = encodeURIComponent(newsQuery);
+async function fetchNHL({ team, name }) {
+  const sched = await getJSON(`https://api-web.nhle.com/v1/club-schedule-season/${team}/now`);
+  const games = sched.games.map((g) => nhlGame(g, team));
+  const [standings, scores] = await Promise.allSettled([fetchNHLStandings(), fetchNHLScores()]);
+  const table = standings.status === "fulfilled" ? standings.value : [];
+  const row = table.find((r) => r.team === team);
+  return {
+    team,
+    name,
+    live: games.find((g) => g.state === "LIVE" || g.state === "CRIT") || null,
+    last: games.filter((g) => g.state === "FINAL" || g.state === "OFF").slice(-3).reverse(),
+    next: games.filter((g) => g.state === "FUT" || g.state === "PRE").slice(0, 2),
+    standing: row
+      ? { division: row.division, divisionRank: row.divisionRank, points: row.pts, gp: row.gp, record: `${row.w}-${row.l}-${row.otl}` }
+      : null,
+    standings: table,
+    scores: scores.status === "fulfilled" ? scores.value : null,
+  };
+}
+
+// ----- SHL -----
+// SHL has no open API. The table is read from the season's Wikipedia article (updated by volunteers,
+// usually within a day). If that fails, the page simply shows news and a link to shl.se.
+
+function stripTags(html) {
+  return decodeEntities(html.replace(/<sup[\s\S]*?<\/sup>/gi, "").replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
+}
+
+function currentSeason(date = new Date()) {
+  const y = date.getMonth() >= 6 ? date.getFullYear() : date.getFullYear() - 1; // season starts in autumn
+  return `${y}–${String((y + 1) % 100).padStart(2, "0")}`;
+}
+
+function parseStandingsTable(html) {
+  const tables = html.match(/<table[^>]*class="[^"]*wikitable[^"]*"[\s\S]*?<\/table>/gi) || [];
+  for (const t of tables) {
+    const rows = t.match(/<tr[\s\S]*?<\/tr>/gi) || [];
+    if (rows.length < 5) continue;
+    const head = (rows[0].match(/<th[\s\S]*?<\/th>/gi) || []).map(stripTags);
+    const col = (...names) => head.findIndex((h) => names.includes(h.replace(/\s/g, "")));
+    const iTeam = col("Team", "Lag");
+    const iPts = col("Pts", "P", "Poäng");
+    const iGp = col("GP", "Pld", "M", "GP[a]");
+    if (iTeam < 0 || iPts < 0 || iGp < 0) continue;
+    const iGd = col("GD", "+/-", "±", "Diff");
+    const out = [];
+    for (const r of rows.slice(1)) {
+      const cells = (r.match(/<t[hd][\s\S]*?<\/t[hd]>/gi) || []).map(stripTags);
+      if (cells.length < head.length - 1) continue;
+      // Some tables put the position in a <th> that the header row doesn't count; align from the right.
+      const shift = cells.length - head.length;
+      const at = (i) => cells[i + shift];
+      const team = (at(iTeam) || "").replace(/\s*\([A-Z, ]+\)\s*$/, "").trim();
+      const pts = parseInt(at(iPts), 10);
+      if (!team || Number.isNaN(pts)) continue;
+      out.push({
+        rank: out.length + 1,
+        team,
+        gp: parseInt(at(iGp), 10) || 0,
+        gd: iGd >= 0 ? (at(iGd) || "").replace("−", "-") : null,
+        pts,
+      });
+    }
+    if (out.length >= 10) return out;
+  }
+  return null;
+}
+
+async function fetchSHLTable() {
+  const page = encodeURIComponent(`${currentSeason()} SHL season`);
+  const data = await getJSON(`https://en.wikipedia.org/w/api.php?action=parse&page=${page}&prop=text&format=json&formatversion=2&redirects=1`);
+  if (data.error) throw new Error(data.error.info);
+  const table = parseStandingsTable(data.parse.text);
+  if (!table) throw new Error("hittade ingen tabell på Wikipedia");
+  return { table, source: `https://en.wikipedia.org/wiki/${page}` };
+}
+
+async function googleNews(query, label = "Google Nyheter", n = 8) {
+  const q = encodeURIComponent(query);
   const xml = await getText(`https://news.google.com/rss/search?q=${q}&hl=sv&gl=SE&ceid=SE:sv`);
-  return { name, link, news: parseFeed(xml, "Google Nyheter").slice(0, 5) };
+  return parseFeed(xml, label).slice(0, n);
+}
+
+async function fetchSHL({ name, newsQuery, link }) {
+  const [tbl, news] = await Promise.allSettled([fetchSHLTable(), googleNews(newsQuery, "Google Nyheter", 6)]);
+  return {
+    name,
+    link,
+    table: tbl.status === "fulfilled" ? tbl.value.table : null,
+    tableSource: tbl.status === "fulfilled" ? tbl.value.source : null,
+    tableError: tbl.status === "rejected" ? tbl.reason.message : null,
+    news: news.status === "fulfilled" ? news.value : [],
+  };
 }
 
 async function updateHockey() {
   const errors = [];
-  const [nhl, shl] = await Promise.allSettled([fetchNHL(config.hockey.nhl), fetchSHLNews(config.hockey.shl)]);
+  const [nhl, shl] = await Promise.allSettled([fetchNHL(config.hockey.nhl), fetchSHL(config.hockey.shl)]);
   if (nhl.status === "rejected") errors.push(`NHL: ${nhl.reason.message}`);
   if (shl.status === "rejected") errors.push(`SHL: ${shl.reason.message}`);
+  if (shl.status === "fulfilled" && shl.value.tableError) errors.push(`SHL-tabell: ${shl.value.tableError}`);
   await save("hockey", {
     nhl: nhl.status === "fulfilled" ? nhl.value : null,
-    shl: shl.status === "fulfilled" ? shl.value : { name: config.hockey.shl.name, link: config.hockey.shl.link, news: [] },
+    shl: shl.status === "fulfilled" ? shl.value : { name: config.hockey.shl.name, link: config.hockey.shl.link, news: [], table: null },
     errors,
   });
 }

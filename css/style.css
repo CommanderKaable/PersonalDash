@@ -120,7 +120,7 @@ a:hover { color: var(--magenta); text-decoration-color: var(--magenta); }
 .btn.is-done { background: var(--up); color: var(--on-accent); }
 .btn.is-failed { background: var(--down); color: var(--on-accent); }
 .btn--refresh { margin-left: auto; }
-.btn--theme { align-self: center; }
+.btn--theme { flex: none; }
 
 /* ---------- Masthead ---------- */
 
@@ -161,23 +161,23 @@ a:hover { color: var(--magenta); text-decoration-color: var(--magenta); }
 }
 .masthead__title::before { color: var(--magenta-bright); animation: glitch-a 9s infinite steps(1); }
 .masthead__title::after { color: var(--cyan-bright); animation: glitch-b 9s infinite steps(1); }
-.masthead__slash { color: var(--magenta); }
+/* Neon marker in front of the date line */
+#dayname { padding-right: 0.12em; }
+#dayname + .masthead__edition::before {
+  content: "";
+  display: inline-block;
+  width: 18px; height: 10px;
+  margin-right: 10px;
+  background: var(--magenta-bright);
+  clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+  vertical-align: 0;
+}
 .masthead__edition {
   margin: 10px 0 0;
   font: 600 15px/1 var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--ink-2);
-}
-.masthead__clock { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; justify-content: flex-end; }
-.masthead__week {
-  font: 700 18px/1 var(--font-display);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  background: var(--ink);
-  color: var(--paper);
-  padding: 8px 14px 7px;
-  clip-path: var(--clip);
 }
 .masthead__time {
   font: 700 clamp(48px, 6vw, 80px)/0.85 var(--font-display);
@@ -192,6 +192,13 @@ a:hover { color: var(--magenta); text-decoration-color: var(--magenta); }
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 28px;
+  padding: 0;
+  flex: 1;
+}
+.weatherbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   padding: 22px 0 14px;
 }
 .wx { display: flex; align-items: baseline; gap: 10px; }
@@ -588,6 +595,71 @@ a:hover { color: var(--magenta); text-decoration-color: var(--magenta); }
   letter-spacing: 0.18em;
   color: var(--ink-3);
 }
+
+/* ---------- News & Sport panel ---------- */
+
+.section-tabs { display: flex; gap: 4px; }
+.section-tab {
+  font: 800 15px/1 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  border: 0;
+  padding: 9px 16px 8px 14px;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  clip-path: var(--clip);
+  transition: background-color 0.2s, color 0.2s;
+}
+.section-tab:hover { color: var(--ink); background: var(--paper-2); }
+.section-tab[aria-selected="true"] { background: var(--cyan); color: var(--on-accent); }
+.section-tab[aria-selected="true"]:first-child { background: var(--magenta); }
+
+.cycle-dot {
+  width: 8px; height: 8px;
+  margin-left: auto;
+  background: var(--ink-3);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  opacity: 0.35;
+}
+.panel--news.is-cycling .cycle-dot { background: var(--cyan-bright); opacity: 1; animation: blink 1.4s steps(1) infinite; }
+.panel--news .btn--refresh { margin-left: 0; }
+
+.games { display: grid; gap: 2px; }
+.gm {
+  display: grid;
+  grid-template-columns: 1fr auto 44px;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 8px;
+  font-variant-numeric: tabular-nums;
+  border-top: 1px dashed var(--rule);
+}
+.gm:first-child { border-top: 0; }
+.gm__teams { font: 600 15px/1.2 var(--font-display); letter-spacing: 0.06em; }
+.gm__score { font: 700 16px/1 var(--font-display); }
+.gm__state { font: 700 11px/1 var(--font-display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); text-align: right; }
+.gm__state.is-live { color: var(--down); animation: blink 1.2s steps(1) infinite; }
+.gm.is-mine, .tbl tr.is-mine td {
+  background: color-mix(in srgb, var(--yellow) 45%, transparent);
+}
+:root[data-theme="dark"] .gm.is-mine,
+:root[data-theme="dark"] .tbl tr.is-mine td { background: rgba(242, 229, 0, 0.16); }
+.tbl tr.is-mine td:first-child { box-shadow: inset 3px 0 0 var(--magenta-bright); }
+
+.tbl { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
+.tbl th {
+  text-align: left;
+  font: 700 11px/1 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-3);
+  padding: 4px 6px;
+}
+.tbl td { padding: 5px 6px; border-top: 1px solid var(--rule); }
+.tbl .num { text-align: right; width: 1%; white-space: nowrap; }
+.tbl td.num:last-child { font-weight: 700; }
+h4.news-sub { margin-top: 12px; color: var(--ink-2); }
 
 /* ---------- Page entrance ---------- */
 
